@@ -11,9 +11,4 @@ const db = mysql.createPool({
     database:process.env.DB_NAME
 })
 
-db.getConnection((err,conn)=>{
-    if(err) console.log(err);
-    console.log("Connected successfully");
-})
-
-module.exports = db.promise();
+module.exports = db;
