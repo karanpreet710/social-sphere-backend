@@ -2,12 +2,6 @@ const express = require("express");
 
 const app = express();
 
-const userRoute = require("./routes/users");
-const postRoute = require("./routes/posts");
-const likeRoute = require("./routes/likes");
-const commentRoute = require("./routes/comments");
-const authRoute = require("./routes/auth");
-const relationshipRoute = require('./routes/relationships');
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
@@ -16,33 +10,37 @@ dotenv.config({
   path:'./backend/.env'
 });
 
-app.use((req,res,next)=>{
-    res.header("Access-Control-Allow-Origin", "https://socialsphere-296f.onrender.com");
-    res.header("Access-Control-Allow-Credentials", true);
-    next()
-})
+app.use(cors({
+  origin:"https://socialsphere-296f.onrender.com",
+  credentials:true
+}));
+
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
-app.use(cors({
-    origin:"https://socialsphere-296f.onrender.com"
-}));
-app.use(cookieParser());
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, "https://socialsphere-296f.onrender.com/public/upload");
-    },
-    filename: function (req, file, cb) {
-      cb(null, Date.now() + file.originalname);
-    },
-  });
-  
+  destination: function (req, file, cb) {
+    cb(null, "https://socialsphere-296f.onrender.com/public/upload");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + file.originalname);
+  },
+});
+
 const upload = multer({ storage: storage });
 
 app.post('/api/upload',upload.single("file"),(req,res)=>{
-    const file = req.file;
-    res.status(200).send(file.filename)
+  const file = req.file;
+  res.status(200).send(file.filename)
 })
+
+const userRoute = require("./routes/users");
+const postRoute = require("./routes/posts");
+const likeRoute = require("./routes/likes");
+const commentRoute = require("./routes/comments");
+const authRoute = require("./routes/auth");
+const relationshipRoute = require('./routes/relationships');
 
 app.use('/api/users',userRoute);
 app.use('/api/posts',postRoute);
