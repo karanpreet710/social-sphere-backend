@@ -17,6 +17,7 @@ dotenv.config({
 });
 
 app.use((req,res,next)=>{
+    res.header("Access-Control-Allow-Origin", "https://socialsphere-296f.onrender.com");
     res.header("Access-Control-Allow-Credentials", true);
     next()
 })
