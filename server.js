@@ -12,8 +12,9 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const dotenv = require('dotenv');
-dotenv.config();
-
+dotenv.config({
+  path:'./backend/.env'
+});
 
 app.use((req,res,next)=>{
     res.header("Access-Control-Allow-Credentials", true);
