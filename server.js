@@ -21,7 +21,7 @@ app.use(express.urlencoded({extended:true}));
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "https://social-sphere-frontend.onrender.com//public/upload");
+    cb(null, "https://social-sphere-frontend.onrender.com/public/upload");
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + file.originalname);
