@@ -26,14 +26,10 @@ const login = (req,res) => {
         if(!checkPassword) return res.status(400).json("Wrong password or username!");
         const token = jwt.sign({id:data[0].id},"mysecretkey");
         const {password,...others} = data[0];
-        console.log(token);
-        console.log(others)
-        console.log("Before setting the cookie");
         res.cookie("accessToken", token, {
         httpOnly: true,
         domain: ".onrender.com"
-        });
-        console.log("After setting the cookie");
+        }).status(200).json(others);
     })
 }
 
