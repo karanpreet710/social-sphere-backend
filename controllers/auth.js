@@ -27,8 +27,7 @@ const login = (req,res) => {
         const token = jwt.sign({id:data[0].id},"mysecretkey");
         const {password,...others} = data[0];
         res.cookie("accessToken", token, {
-        httpOnly: true,
-        domain: ".onrender.com"
+        httpOnly: true
         }).status(200).json(others);
     })
 }
