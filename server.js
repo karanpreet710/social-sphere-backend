@@ -11,7 +11,7 @@ dotenv.config({
 });
 
 app.use(cors({
-  origin:"https://socialsphere-296f.onrender.com",
+  origin:"https://socialsphere-68g3.onrender.com",
   credentials:true
 }));
 
