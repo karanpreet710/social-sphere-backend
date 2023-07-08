@@ -11,7 +11,7 @@ dotenv.config({
 });
 
 app.use(cors({
-  origin:"https://socialsphere-ten.vercel.app/",
+  origin:"https://socialsphere-ten.vercel.app",
   credentials:true
 }));
 
