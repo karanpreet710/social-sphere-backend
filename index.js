@@ -11,7 +11,7 @@ dotenv.config({
 });
 
 app.use(cors({
-  origin:"https://socialsphere-68g3.onrender.com/",
+  origin:"https://socialsphere-backend.vercel.app/",
   credentials:true
 }));
 
@@ -21,7 +21,7 @@ app.use(express.urlencoded({extended:true}));
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "https://socialsphere-68g3.onrender.com//public/upload");
+    cb(null, "https://socialsphere-backend.vercel.app/public/upload");
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + file.originalname);
