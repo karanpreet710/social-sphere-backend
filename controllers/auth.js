@@ -28,7 +28,7 @@ const login = (req,res) => {
         const {password,...others} = data[0];
         res.cookie("accessToken", token, {
         httpOnly: true,
-        domain: process.env.NODE_ENV === 'development' ? '.localhost' : '.vercel.app'
+        domain: '.vercel.app'
         }).status(200).json(others);
     })
 }
