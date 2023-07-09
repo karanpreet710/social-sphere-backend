@@ -10,18 +10,21 @@ dotenv.config({
   path:'./backend/.env'
 });
 
-app.use(cors({
-  origin:"https://client-socialsphere.vercel.app",
-  credentials:true
-}));
-
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
+app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', 'https://socialsphere-seven.vercel.app');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, *');
+  next();
+});
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "https://client-socialsphere.vercel.app/public/upload");
+    cb(null, "https://socialsphere-seven.vercel.app/public/upload");
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + file.originalname);
