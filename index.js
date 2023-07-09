@@ -24,7 +24,7 @@ app.use(function(req, res, next) {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "https://socialsphere-seven.vercel.app/public/upload");
+    cb(null, "./public/upload");
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + file.originalname);
