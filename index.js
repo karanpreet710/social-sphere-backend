@@ -21,7 +21,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-const upload = require('../configs/cloudinary.config');
+const upload = require('../backend/configs/cloudinary.config');
 
 app.post('/api/upload',upload.single("file"),(req,res,next)=>{
   const file = req.file;
