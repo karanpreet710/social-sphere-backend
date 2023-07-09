@@ -4,7 +4,6 @@ const app = express();
 
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const multer = require("multer");
 const dotenv = require('dotenv');
 dotenv.config({
   path:'./backend/.env'
@@ -22,20 +21,15 @@ app.use(function(req, res, next) {
   next();
 });
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "https://api-socialsphere.vercel.app/public/upload");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + file.originalname);
-  },
-});
+const upload = require('../configs/cloudinary.config');
 
-const upload = multer({ storage: storage });
-
-app.post('/api/upload',upload.single("file"),(req,res)=>{
+app.post('/api/upload',upload.single("file"),(req,res,next)=>{
   const file = req.file;
-  res.status(200).send(file.filename)
+  if (!file) {
+    next(new Error('No file uploaded!'));
+    return;
+  }
+  res.status(200).json({ secure_url: req.file.path })
 })
 
 const userRoute = require("./routes/users");
