@@ -2,12 +2,19 @@ const express = require("express");
 
 const app = express();
 
+const http = require("http");
+const socketIO = require("socket.io");
+const server = http.createServer(app);
+const io = socketIO(server);
+
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const dotenv = require('dotenv');
-dotenv.config({
-  path:'./backend/.env'
-});
+const db = require("./connect");
+// dotenv.config({
+//   path:'./backend/.env'
+// });
+dotenv.config();
 
 app.use(cookieParser());
 app.use(express.json());
@@ -38,6 +45,7 @@ const likeRoute = require("./routes/likes");
 const commentRoute = require("./routes/comments");
 const authRoute = require("./routes/auth");
 const relationshipRoute = require('./routes/relationships');
+const messageRoute = require("./routes/messages");
 
 app.use('/api/users',userRoute);
 app.use('/api/posts',postRoute);
@@ -45,8 +53,41 @@ app.use('/api/likes',likeRoute);
 app.use('/api/comments',commentRoute);
 app.use('/api/auth',authRoute);
 app.use('/api/relationships',relationshipRoute);
+app.use('/api/messages',messageRoute);
+
+io.on('connection', (socket) => {
+  console.log('New client connected')
+  socket.on('joinRoom', (rooms) => {
+    socket.join(rooms);
+  });
+  
+  socket.on('leaveRoom', (roomId) => {
+    socket.leave(roomId);
+  });
+  // Handle incoming chat messages
+  socket.on('chat message', ({message,roomId}) => {
+    // Save the message to the database
+    const { id, sender, receiver, content, timestamp, image } = message;
+    const contentR = content ? content : null
+    const imagePath = image ? image : null;
+    const query = `INSERT INTO messages (id, sender, receiver, content, timestamp, image) VALUES (?, ?, ?, ?, ?, ?)`;
+    db.query(query, [id, sender, receiver, contentR, timestamp, imagePath], (err, result) => {
+      if (err) {
+        console.error('Error saving message:', err);
+        return;
+      }
+      // Broadcast the message to the recipient's socket
+      io.to(roomId).emit('message', message);
+    });
+  });
+
+  // Handle disconnect event
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+  });
+});
 
 
-app.listen(5000,()=>{
+server.listen(5000,()=>{
     console.log(`Server running on http://localhost:${process.env.PORT}`);
 })
