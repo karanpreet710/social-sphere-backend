@@ -2,10 +2,10 @@ const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
 const dotenv = require('dotenv');
-// dotenv.config({
-//     path:'../../backend/.env'
-// });
-dotenv.config();
+dotenv.config({
+    path:'../../backend/.env'
+});
+// dotenv.config();
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,

@@ -11,10 +11,10 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const dotenv = require('dotenv');
 const db = require("./connect");
-// dotenv.config({
-//   path:'./backend/.env'
-// });
-dotenv.config();
+dotenv.config({
+  path:'./backend/.env'
+});
+// dotenv.config();
 
 app.use(cookieParser());
 app.use(express.json());
