@@ -1,6 +1,19 @@
 const db =  require("../connect");
 const jwt = require("jsonwebtoken");
 
+const getAllUsers = (req,res) => {
+    const q = "SELECT * FROM users";
+    db.query(q,(err,data)=>{
+        if(err) return res.status(500).json(err)
+        const result = [];
+        data.forEach((user)=>{
+            const {password,...info} = user;
+            result.push(info);
+        })
+        return res.json(result);
+    })
+};
+
 const getUser = (req,res) => {
     const userId =  req.params.userId;
     const q = "SELECT * FROM users WHERE id=?";
@@ -33,5 +46,5 @@ const updateUser = (req,res) => {
 }
 
 module.exports = {
-    getUser,updateUser
+    getAllUsers,getUser,updateUser
 };

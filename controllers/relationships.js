@@ -2,9 +2,18 @@ const db = require("../connect");
 const jwt = require("jsonwebtoken");
 
 const getRelationships = (req,res) => {
-    if (req.query.followerUserId !== null) {
-        const query1 = `SELECT followedUserId FROM relationships WHERE followerUserId = ?`;
-        db.query(query1, [req.query.followerUserId], (err, data) => {
+    if (req.query.followerUserId != null) {
+        const query1 = `
+        SELECT followedUserId 
+        FROM relationships 
+        WHERE followerUserId = ? 
+        AND followedUserId IN (
+            SELECT followerUserId 
+            FROM relationships 
+            WHERE followedUserId = ?
+        );
+        `;
+        db.query(query1, [req.query.followerUserId,req.query.followerUserId], (err, data) => {
           if (err) return res.status(500).json(err);
           const promises = data.map((d) => {
             return new Promise((resolve, reject) => {

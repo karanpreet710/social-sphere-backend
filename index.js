@@ -41,22 +41,42 @@ app.post('/api/upload',upload.single("file"),(req,res,next)=>{
 
 const userRoute = require("./routes/users");
 const postRoute = require("./routes/posts");
+const storyRoute = require("./routes/stories");
 const likeRoute = require("./routes/likes");
 const commentRoute = require("./routes/comments");
 const authRoute = require("./routes/auth");
 const relationshipRoute = require('./routes/relationships');
 const messageRoute = require("./routes/messages");
+const requestRoute = require("./routes/requests");
 
 app.use('/api/users',userRoute);
 app.use('/api/posts',postRoute);
 app.use('/api/likes',likeRoute);
+app.use('/api/stories',storyRoute);
 app.use('/api/comments',commentRoute);
 app.use('/api/auth',authRoute);
 app.use('/api/relationships',relationshipRoute);
 app.use('/api/messages',messageRoute);
+app.use('/api/requests',requestRoute);
+
+let onlineUsers = [];
 
 io.on('connection', (socket) => {
   console.log('New client connected')
+
+  socket.on('online', (user) => {
+    if (!onlineUsers.find(onlineUser => onlineUser.id === user.id)) {
+      onlineUsers.push({ ...user, socketId: socket.id });
+      io.emit('onlineUsers', onlineUsers);
+    }
+  });
+  
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+    onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id);
+    io.emit('onlineUsers', onlineUsers);
+  });
+
   socket.on('joinRoom', (rooms) => {
     socket.join(rooms);
   });
